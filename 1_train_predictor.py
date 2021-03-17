@@ -225,11 +225,11 @@ def train(args, model, train_dataset,epoch):
                 hids1.append(hid)
             outSeq1 = torch.cat(outVals,dim=0)
             hids1 = torch.cat(hids1,dim=0)
-            loss1 = criterion(outSeq1.view(args.batch_size,-1), targetSeq.view(args.batch_size,-1))
+            loss1 = criterion(outSeq1.contiguous().view(args.batch_size,-1), targetSeq.contiguous().view(args.batch_size,-1))
 
             '''Loss2: Teacher forcing loss'''
             outSeq2, hidden, hids2 = model.forward(inputSeq, hidden, return_hiddens=True)
-            loss2 = criterion(outSeq2.view(args.batch_size, -1), targetSeq.view(args.batch_size, -1))
+            loss2 = criterion(outSeq2.contiguous().view(args.batch_size, -1), targetSeq.contiguous().view(args.batch_size, -1))
 
             '''Loss3: Simplified Professor forcing loss'''
             loss3 = criterion(hids1.view(args.batch_size,-1), hids2.view(args.batch_size,-1).detach())
@@ -276,11 +276,11 @@ def evaluate(args, model, test_dataset):
                 hids1.append(hid)
             outSeq1 = torch.cat(outVals,dim=0)
             hids1 = torch.cat(hids1,dim=0)
-            loss1 = criterion(outSeq1.view(args.batch_size,-1), targetSeq.view(args.batch_size,-1))
+            loss1 = criterion(outSeq1.contiguous().view(args.batch_size,-1), targetSeq.contiguous().view(args.batch_size,-1))
 
             '''Loss2: Teacher forcing loss'''
             outSeq2, hidden, hids2 = model.forward(inputSeq, hidden, return_hiddens=True)
-            loss2 = criterion(outSeq2.view(args.batch_size, -1), targetSeq.view(args.batch_size, -1))
+            loss2 = criterion(outSeq2.contiguous().view(args.batch_size, -1), targetSeq.contiguous().view(args.batch_size, -1))
 
             '''Loss3: Simplified Professor forcing loss'''
             loss3 = criterion(hids1.view(args.batch_size,-1), hids2.view(args.batch_size,-1).detach())
