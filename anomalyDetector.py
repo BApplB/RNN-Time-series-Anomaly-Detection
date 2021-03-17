@@ -104,7 +104,8 @@ def get_precision_recall(args, score, label, num_samples, beta=1.0, sampling='lo
     if sampling=='log':
         # Sample thresholds logarithmically
         # The sampled thresholds are logarithmically spaced between: math:`10 ^ {start}` and: math:`10 ^ {end}`.
-        th = torch.logspace(0, torch.log10(torch.tensor(maximum)), num_samples).to(args.device)
+        th = torch.logspace(0, torch.log10(maximum.clone().detach()), num_samples).to(args.device)
+        #torch.tensor(maximum) -> maximum.clone().detach() as of PyTorch 1.6
     else:
         # Sample thresholds equally
         # The sampled thresholds are equally spaced points between: attr:`start` and: attr:`end`
